@@ -147,11 +147,11 @@ st.sidebar.header("Input Parameters")
 st.sidebar.subheader("Model Tuning Parameters")
 empirical_constant_c_horizontal = st.sidebar.number_input(
     "Speed Constant (C)", min_value=0.00001, max_value=0.01, value=EMPIRICAL_CONSTANT_C, step=0.00005, format="%.5f",
-    help="For `v ≈ C*A_eff*f²*sin(δ)`"
+    help="For `v ≈ C*A_eff*f²*cos(δ)`"
 )
 st.sidebar.markdown("**Steady-State Blocking Model (`f∞ = fn(K)`):**")
 hole_fraction_area = st.sidebar.slider(
-    "Opening Frac. of Screen", min_value=0.001, max_value=1.0, value=0.26, step=0.01,
+    r"Opening Frac. of Screen, $\alpha_{op}$", min_value=0.001, max_value=1.0, value=0.26, step=0.01,
     help="Design Opening fraction of screen, 0.26 for 500 Mesh"
 )
 blocking_finf_min = st.sidebar.slider(
@@ -361,8 +361,8 @@ if plt: # Only show if Matplotlib was imported successfully
 
 st.header(":green[Estimated Performance]")
 col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4) # Added 4th column back
-with col_perf1: st.metric(label="Est. Speed ($v$)", value=f"{calculated_speed_mps:.3f} m/s" if not is_resonant else "Resonant!"); st.caption(r"$v \approx C A_{eff} f^2 \sin\delta$")
-with col_perf2: st.metric(label="Est. Base Throughput ($Q_{base}$)", value=f"{throughput_kg_h_base:.0f} kg/h" if not is_resonant else "N/A"); st.caption(r"$Q_{base} \approx v D h \rho of$")
+with col_perf1: st.metric(label="Est. Speed ($v$)", value=f"{calculated_speed_mps:.3f} m/s" if not is_resonant else "Resonant!"); st.caption(r"$v \approx C A_{eff} f^2 \cos\delta\\A_{eff}=\sqrt{A_h^2 + A_v^2}$")
+with col_perf2: st.metric(label="Est. Base Throughput ($Q_{base}$)", value=f"{throughput_kg_h_base:.0f} kg/h" if not is_resonant else "N/A"); st.caption(r"$Q_{base} \approx v D h \rho \alpha_{op}$")
 with col_perf3: st.metric(label="Est. Actual Throughput ($Q_{actual}$)", value=f"{throughput_kg_h_actual:.0f} kg/h" if not is_resonant else "N/A"); st.caption(r"$Q_{actual} \approx Q_{base} \cdot f_{\infty}$")
 with col_perf4: st.metric(label="Est. Efficiency ($f_∞$)", value=f"{screen_efficiency_perc/hole_fraction_area:.1f}%"); st.caption(f"Blocking Model ($K={toss_indicator_K:.2f}$)")
 
