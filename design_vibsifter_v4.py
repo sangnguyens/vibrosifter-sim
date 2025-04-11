@@ -226,7 +226,7 @@ number_of_springs = st.sidebar.number_input( # Corrected typo previously
     help="Total number of springs."
 )
 est_bed_depth_mm = st.sidebar.number_input(
-    "Estimated Material Bed Depth (mm)", min_value=1.0, max_value=50.0, value=5.0, step=1.0,
+    "Estimated Material Bed Depth (mm)", min_value=1.0, max_value=50.0, value=15.0, step=1.0,
     help="Influences total mass."
 )
 
