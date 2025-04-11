@@ -277,7 +277,7 @@ if is_resonant: calculated_speed_mps=float('inf'); throughput_kg_h_base=0.0; thr
 else:
     calculated_speed_mps = calculate_transport_speed_enhanced(A_h_mm, A_v_mm, frequency_hz, lead_angle_physical_deg, empirical_constant_c_horizontal)
     throughput_kg_h_base = calculate_throughput_kg_h_base(calculated_speed_mps, screen_diameter_m, bed_depth_m, bulk_density_kg_m3)
-    throughput_t_h_base = throughput_kg_h_base / 1000.0
+    throughput_t_h_base = throughput_kg_h_base / 1000.0 * hole_fraction_area
 
 # Calculate Toss Indicator K & Steady-State Blocking f_inf
 if is_resonant_v or frequency_hz <= 1e-6: toss_indicator_K = 0.0
