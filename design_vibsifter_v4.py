@@ -185,18 +185,18 @@ lead_angle_physical_deg = st.sidebar.slider(
     help="PHYSICAL angle set between weights."
 )
 
-st.sidebar.subheader("Granule Properties")
+st.sidebar.subheader("Feed Properties")
 # If min size is truly needed only for aperture suggestion, add it back:
 min_granule_mm_for_suggestion = st.sidebar.number_input(
     "Min Granule Size (for suggestion) (mm)", min_value=0.0010, max_value=0.10, value=min_psd, step=0.01, format="%.3f",
     help="ONLY used to suggest default screen aperture."
 )
-mean_granule_mm = st.sidebar.number_input(
-    "Feed Particle Diameter (mm)", min_value=0.010, max_value=50.0, value=mean_psd, step=0.1, format="%.3f",
-    help="Mainly for context, not used in calcs now."
-)
+# mean_granule_mm = st.sidebar.number_input(
+#     "Feed Particle Diameter (mm)", min_value=0.010, max_value=50.0, value=mean_psd, step=0.1, format="%.3f",
+#     help="Mainly for context, not used in calcs now."
+# )
 bulk_density_gcm3 = st.sidebar.number_input(
-    "Granule Bulk Density (g/cm³ or t/m³)", min_value=0.5, max_value=1.30, value=bulk_density, step=0.05
+    "Feed Bulk Density (g/cm³ or t/m³)", min_value=0.5, max_value=1.30, value=bulk_density, step=0.05
 )
 
 st.sidebar.subheader("Machine & System")
@@ -233,6 +233,7 @@ frequency_hz = st.sidebar.slider(
 suggested_aperture_mm = recommend_mesh_size(min_granule_mm_for_suggestion) # Use the suggestion input
 bulk_density_kg_m3=bulk_density_gcm3*1000.0; bed_depth_m=est_bed_depth_mm/1000.0
 screen_radius_m=screen_diameter_m/2.0; screen_area_m2=math.pi*(screen_radius_m**2)
+
 # Mass Calcs
 material_volume_m3=screen_area_m2*bed_depth_m; material_mass_kg=material_volume_m3*bulk_density_kg_m3
 total_vibrating_mass_kg=machine_vibrating_mass_kg + material_mass_kg
@@ -283,7 +284,7 @@ throughput_t_h_actual = throughput_kg_h_actual / 1000.0
 screen_efficiency_perc = steady_state_f_inf * 100.0
 
 # Format Aperture Size for Display
-if aperture_size_mm_input < 0.1:
+if suggested_aperture_mm < 0.1:
     aperture_display_val = suggested_aperture_mm * 1000.0; aperture_display_unit = "µm"; aperture_display_format = ".0f"
 else:
     aperture_display_val = suggested_aperture_mm; aperture_display_unit = "mm"; aperture_display_format = ".3f"
@@ -307,7 +308,7 @@ else: st.success(f"Force Feasible")
 
 # --- NEW: Flow Pattern Visualizer Section ---
 if plt: # Only show if Matplotlib was imported successfully
-    with st.expander(":blue[Visualize Conceptual Flow Pattern]", expanded=False):
+    with st.expander(":blue[Visualize Conceptual Flow Pattern]", expanded=True):
         st.markdown("How lead angle affects the particle path (illustrative only).")
         vis_step_scale = st.slider(
             "Visualization Step Scale Factor (k_step)",
@@ -329,19 +330,21 @@ if plt: # Only show if Matplotlib was imported successfully
         if vis_warning:
             st.warning(vis_warning)
         
-        fig_vis, ax_vis = plt.subplots(figsize=(5, 5))
+        fig_vis, ax_vis = plt.subplots(figsize=(3, 3))
         screen_circle_vis = plt.Circle((0, 0), screen_diameter_m / 2.0, color='gray', fill=False, linestyle='--', linewidth=1)
         ax_vis.add_patch(screen_circle_vis)
         ax_vis.plot(vis_x, vis_y, marker='.', markersize=1, linestyle='-', linewidth=0.8, label=f'Path (δ={lead_angle_physical_deg}°)')
         if len(vis_x) > 0:
             ax_vis.plot(vis_x[0], vis_y[0], 'go', markersize=4, label='Start')
+            ax_vis.text(vis_x[0], vis_y[0], s='Start')
             ax_vis.plot(vis_x[-1], vis_y[-1], 'ro', markersize=4, label='End')
+            ax_vis.text(vis_x[-1], vis_y[-1], s='End')
         ax_vis.set_xlabel("X (m)"); ax_vis.set_ylabel("Y (m)")
         ax_vis.set_title("Conceptual Particle Path"); ax_vis.set_aspect('equal', adjustable='box')
         vis_limit = screen_diameter_m / 2.0 * 1.1
         ax_vis.set_xlim(-vis_limit, vis_limit); ax_vis.set_ylim(-vis_limit, vis_limit)
         ax_vis.grid(True, linestyle=':', alpha=0.5)
-        ax_vis.legend(loc='upper right')
+        # ax_vis.legend(loc='upper right')
         st.pyplot(fig_vis)
         st.caption("Note: Simplified model ignoring friction, collisions, detailed dynamics. Illustrates directional trend vs. lead angle.")
         
@@ -362,7 +365,7 @@ st.header(":green[Configuration Summary]")
 col_setup1, col_setup2, col_setup3 = st.columns(3)
 with col_setup1: st.subheader("Screen"); st.metric(label="Diameter", value=f"{screen_diameter_m:.2f} m"); st.metric(label="Aperture Size (a)", value=aperture_display_str)
 with col_setup2: st.subheader("System"); st.metric(label="Machine Mass", value=f"{machine_vibrating_mass_kg:.1f} kg"); st.metric(label="Total Stiffness", value=f"{k_total_N_m/1000:.1f} kN/m")
-with col_setup3: st.subheader("Material"); st.metric(label="Bulk Density", value=f"{bulk_density_gcm3} g/cm³"); st.metric(label="Particle Size (d)", value=f"{mean_granule_mm:.3f} mm")
+with col_setup3: st.subheader("Material"); st.metric(label="Bulk Density", value=f"{bulk_density_gcm3} g/cm³"); st.metric(label="Particle Size (d)", value=f"{min_granule_mm_for_suggestion:.3f} mm")
 
 
 st.markdown("---")
