@@ -2,13 +2,13 @@
 EMPIRICAL_CONSTANT_C = 0.000050 # Speed constant
 GRAVITY_G = 9.81 # m/s^2
 # --- Blocking Model Constants ---
-BLOCKING_FINF_MIN = 0.50 # Minimum possible f_inf
-BLOCKING_FINF_MAX = 0.98 # Maximum possible f_inf
+BLOCKING_FINF_MIN = 0.1 # Minimum possible f_inf
+BLOCKING_FINF_MAX = 0.26 # Maximum possible f_inf
 BLOCKING_K_SENSITIVITY = 0.5 # How quickly f_inf increases with K
 BLOCKING_K_MIDPOINT = 3.0 # Toss indicator K for midpoint f_inf
 
 F_max = 15000.0 # Default value
-top_ecc_m = 0.1 # Default value
+top_ecc_m = 0.05 # Default value
 bottom_ecc_m = 0.1 # Default value
 lead_angle = 30.0 # Default value
 min_psd = 0.07 # Default value
