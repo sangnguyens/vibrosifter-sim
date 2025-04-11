@@ -3,7 +3,7 @@ EMPIRICAL_CONSTANT_C = 0.000050 # Speed constant
 GRAVITY_G = 9.81 # m/s^2
 # --- Blocking Model Constants ---
 BLOCKING_FINF_MIN = 0.1 # Minimum possible f_inf
-BLOCKING_FINF_MAX = 0.26 # Maximum possible f_inf
+BLOCKING_FINF_MAX = 0.8 # Maximum possible f_inf
 BLOCKING_K_SENSITIVITY = 0.5 # How quickly f_inf increases with K
 BLOCKING_K_MIDPOINT = 3.0 # Toss indicator K for midpoint f_inf
 
@@ -159,8 +159,8 @@ blocking_finf_min = st.sidebar.slider(
     help="Minimum possible f∞ (at K=0)."
 )
 blocking_finf_max = st.sidebar.slider(
-    "Max Equil. Free Fraction (f∞_max)", min_value=0.05, max_value=0.50, value=BLOCKING_FINF_MAX, step=0.01,
-    help="Maximum possible f∞ (at high K)."
+    "Max Equil. Free Hole Fraction", min_value=0.05, max_value=1.0, value=BLOCKING_FINF_MAX, step=0.01,
+    help="Maximum possible free hole available."
 )
 blocking_k_sensitivity = st.sidebar.number_input(
     "Blocking K Sensitivity", min_value=0.05, max_value=2.0, value=BLOCKING_K_SENSITIVITY, step=0.05,
@@ -284,7 +284,7 @@ else:
 # Calculate Toss Indicator K & Steady-State Blocking f_inf
 if is_resonant_v or frequency_hz <= 1e-6: toss_indicator_K = 0.0
 else: toss_indicator_K = (4 * (math.pi**2) * (frequency_hz**2) * A_v_m) / GRAVITY_G
-steady_state_f_inf = calculate_steady_state_blocking_f(toss_indicator_K, blocking_finf_min, blocking_finf_max, blocking_k_sensitivity, blocking_k_midpoint)
+steady_state_f_inf = calculate_steady_state_blocking_f(toss_indicator_K, blocking_finf_min, blocking_finf_max*hole_fraction_area, blocking_k_sensitivity, blocking_k_midpoint)
 
 # Calculate ACTUAL Throughput adjusted for blocking
 throughput_kg_h_actual = throughput_kg_h_base * steady_state_f_inf / hole_fraction_area
