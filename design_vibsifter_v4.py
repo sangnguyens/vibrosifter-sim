@@ -146,7 +146,7 @@ st.sidebar.header("Input Parameters")
 
 st.sidebar.subheader("Model Tuning Parameters")
 empirical_constant_c_horizontal = st.sidebar.number_input(
-    "Speed Constant (C)", min_value=0.00001, max_value=0.01, value=EMPIRICAL_CONSTANT_C, step=0.00005, format="%.5f",
+    "Speed Constant (C)", min_value=0.00001, max_value=0.01, value=EMPIRICAL_CONSTANT_C, step=0.00001, format="%.5f",
     help="For `v ≈ C*A_eff*f²*cos(δ)`"
 )
 st.sidebar.markdown("**Steady-State Blocking Model (`f∞ = fn(K)`):**")
