@@ -149,8 +149,8 @@ empirical_constant_c_horizontal = st.sidebar.number_input(
 )
 st.sidebar.markdown("**Steady-State Blocking Model (`f∞ = fn(K)`):**")
 hole_fraction_area = st.sidebar.slider(
-    "Hole Frac. Area", min_value=0.001, max_value=1.0, value=0.26, step=0.01,
-    help="Design hole area of screen, 0.26 for 500 Mesh"
+    "Opening Frac. of Screen", min_value=0.001, max_value=1.0, value=0.26, step=0.01,
+    help="Design Opening fraction of screen, 0.26 for 500 Mesh"
 )
 blocking_finf_min = st.sidebar.slider(
     "Min Equil. Free Fraction (f∞_min)", min_value=0.01, max_value=0.2, value=BLOCKING_FINF_MIN, step=0.01,
