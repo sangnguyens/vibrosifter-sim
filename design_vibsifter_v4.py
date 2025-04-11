@@ -204,10 +204,10 @@ screen_diameter_m = st.sidebar.number_input(
     "Screen Diameter (m)", min_value=0.2, max_value=3.0, value=1.0, step=0.1
 )
 suggested_aperture_mm = recommend_mesh_size(min_granule_mm_for_suggestion) # Use the suggestion input
-aperture_size_mm_input = st.sidebar.number_input( # User input aperture in mm
-    "Screen Aperture Size (a) (mm)", min_value=0.020, max_value=50.0, value=suggested_aperture_mm, step=0.01, format="%.3f",
-    help="Actual opening size (informational only)."
-)
+# aperture_size_mm_input = st.sidebar.number_input( # User input aperture in mm
+#     "Screen Aperture Size (a) (mm)", min_value=0.020, max_value=50.0, value=suggested_aperture_mm, step=0.01, format="%.3f",
+#     help="Actual opening size (informational only)."
+# )
 machine_vibrating_mass_kg = st.sidebar.number_input(
     "Machine Vibrating Mass (Dry) (kg)", min_value=40.0, max_value=1500.0, value=80.0, step=10.0,
     help="Excludes material load."
