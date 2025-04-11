@@ -80,8 +80,10 @@ def recommend_mesh_size(min_particle_mm):
     """ Recommends mesh size based on min particle size for scalping. Returns value_mm (aperture estimate). """
     if min_particle_mm > 0.1: safety_factor = 0.8
     else: safety_factor = 0.7
-    mesh_mm = min_particle_mm * safety_factor; practical_min_mesh_mm = 0.020
-    recommended_mesh_aperture_mm = max(practical_min_mesh_mm, mesh_mm); return recommended_mesh_aperture_mm
+    mesh_mm = min_particle_mm * safety_factor; 
+    practical_min_mesh_mm = 0.010
+    recommended_mesh_aperture_mm = max(practical_min_mesh_mm, mesh_mm)
+    return recommended_mesh_aperture_mm
 
 # --- Simulation Function ---
 def simulate_particle_path(diameter, lead_angle_deg, amplitude_eff_mm, step_scale_factor, max_steps=50000):
@@ -282,9 +284,9 @@ screen_efficiency_perc = steady_state_f_inf * 100.0
 
 # Format Aperture Size for Display
 if aperture_size_mm_input < 0.1:
-    aperture_display_val = aperture_size_mm_input * 1000.0; aperture_display_unit = "µm"; aperture_display_format = ".0f"
+    aperture_display_val = suggested_aperture_mm * 1000.0; aperture_display_unit = "µm"; aperture_display_format = ".0f"
 else:
-    aperture_display_val = aperture_size_mm_input; aperture_display_unit = "mm"; aperture_display_format = ".3f"
+    aperture_display_val = suggested_aperture_mm; aperture_display_unit = "mm"; aperture_display_format = ".3f"
 aperture_display_str = f"{aperture_display_val:{aperture_display_format}} {aperture_display_unit}"
 
 # --- Display Results & Recommendations ---
