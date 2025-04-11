@@ -149,11 +149,11 @@ empirical_constant_c_horizontal = st.sidebar.number_input(
 )
 st.sidebar.markdown("**Steady-State Blocking Model (`f∞ = fn(K)`):**")
 blocking_finf_min = st.sidebar.slider(
-    "Min Equil. Free Fraction (f∞_min)", min_value=0.05, max_value=0.95, value=BLOCKING_FINF_MIN, step=0.01,
+    "Min Equil. Free Fraction (f∞_min)", min_value=0.01, max_value=0.2, value=BLOCKING_FINF_MIN, step=0.01,
     help="Minimum possible f∞ (at K=0)."
 )
 blocking_finf_max = st.sidebar.slider(
-    "Max Equil. Free Fraction (f∞_max)", min_value=0.5, max_value=1.0, value=BLOCKING_FINF_MAX, step=0.01,
+    "Max Equil. Free Fraction (f∞_max)", min_value=0.05, max_value=0.50, value=BLOCKING_FINF_MAX, step=0.01,
     help="Maximum possible f∞ (at high K)."
 )
 blocking_k_sensitivity = st.sidebar.number_input(
