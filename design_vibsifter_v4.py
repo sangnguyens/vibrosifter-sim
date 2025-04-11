@@ -148,6 +148,10 @@ empirical_constant_c_horizontal = st.sidebar.number_input(
     help="For `v ≈ C*A_eff*f²*sin(δ)`"
 )
 st.sidebar.markdown("**Steady-State Blocking Model (`f∞ = fn(K)`):**")
+hole_fraction_area = st.sidebar.slider(
+    "Hole Frac. Area", min_value=0.001, max_value=1.0, value=0.26, step=0.01,
+    help="Design hole area of screen, 0.26 for 500 Mesh"
+)
 blocking_finf_min = st.sidebar.slider(
     "Min Equil. Free Fraction (f∞_min)", min_value=0.01, max_value=0.2, value=BLOCKING_FINF_MIN, step=0.01,
     help="Minimum possible f∞ (at K=0)."
@@ -263,6 +267,10 @@ else: A_v_mm = A_v_m * 1000.0
 
 # Calculate effective amplitude for speed calc (avoid error if resonant)
 A_eff_mm_calc = 0.0 if is_resonant else np.sqrt(A_h_mm**2 + A_v_mm**2)
+
+# calculate hole area
+# a_hole = np.pi * (suggested_aperture_mm / 2 * 10**(-6))
+# a_screen = np.pi * (screen_diameter_m ** 2 / 4)
 
 # Calculate Speed & Base Throughput
 if is_resonant: calculated_speed_mps=float('inf'); throughput_kg_h_base=0.0; throughput_t_h_base=0.0
