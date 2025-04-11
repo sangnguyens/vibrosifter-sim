@@ -57,13 +57,15 @@ def calculate_transport_speed_enhanced(A_h_mm, A_v_mm, freq_hz, lead_angle, C):
     A_eff_mm = np.sqrt(A_h_mm**2 + A_v_mm**2)
     if lead_angle <= 0 or C <= 0 or A_eff_mm <= 1e-6: return 0.0
     delta_deg = min(max(0, lead_angle), 90); delta_rad = np.radians(delta_deg)
-    speed_mps = C * (A_eff_mm * (freq_hz**2)) * np.cos(delta_rad); return max(0.0, speed_mps)
+    speed_mps = C * (A_eff_mm * (freq_hz**2)) * np.cos(delta_rad)
+    return max(0.0, speed_mps)
 
-def calculate_throughput_kg_h_base(speed_mps, diameter_m, bed_depth_m, density_kg_m3):
+def calculate_throughput_kg_h_base(speed_mps, diameter_m, bed_depth_m, density_kg_m3, hole_fraction_area):
     """ Calculates BASE mass throughput assuming 100% open area """
     if speed_mps <= 0 or diameter_m <= 0 or bed_depth_m <= 0: return 0.0
     vol_flow = speed_mps * diameter_m * bed_depth_m
-    mass_flow = vol_flow * density_kg_m3 * 3600; return mass_flow
+    mass_flow = vol_flow * density_kg_m3 * 3600 * hole_fraction_area
+    return mass_flow
 
 def calculate_steady_state_blocking_f(toss_indicator_K, f_inf_min, f_inf_max, K_sensitivity, K_midpoint):
     """ Calculates f_inf based on Toss Indicator K using a sigmoid function. """
@@ -276,8 +278,8 @@ A_eff_mm_calc = 0.0 if is_resonant else np.sqrt(A_h_mm**2 + A_v_mm**2)
 if is_resonant: calculated_speed_mps=float('inf'); throughput_kg_h_base=0.0; throughput_t_h_base=0.0
 else:
     calculated_speed_mps = calculate_transport_speed_enhanced(A_h_mm, A_v_mm, frequency_hz, lead_angle_physical_deg, empirical_constant_c_horizontal)
-    throughput_kg_h_base = calculate_throughput_kg_h_base(calculated_speed_mps, screen_diameter_m, bed_depth_m, bulk_density_kg_m3)
-    throughput_t_h_base = throughput_kg_h_base / 1000.0 * hole_fraction_area
+    throughput_kg_h_base = calculate_throughput_kg_h_base(calculated_speed_mps, screen_diameter_m, bed_depth_m, bulk_density_kg_m3, hole_fraction_area)
+    throughput_t_h_base = throughput_kg_h_base / 1000.0
 
 # Calculate Toss Indicator K & Steady-State Blocking f_inf
 if is_resonant_v or frequency_hz <= 1e-6: toss_indicator_K = 0.0
@@ -285,7 +287,7 @@ else: toss_indicator_K = (4 * (math.pi**2) * (frequency_hz**2) * A_v_m) / GRAVIT
 steady_state_f_inf = calculate_steady_state_blocking_f(toss_indicator_K, blocking_finf_min, blocking_finf_max, blocking_k_sensitivity, blocking_k_midpoint)
 
 # Calculate ACTUAL Throughput adjusted for blocking
-throughput_kg_h_actual = throughput_kg_h_base * steady_state_f_inf
+throughput_kg_h_actual = throughput_kg_h_base * steady_state_f_inf / hole_fraction_area
 throughput_t_h_actual = throughput_kg_h_actual / 1000.0
 
 # Efficiency is now directly represented by f_inf
@@ -360,9 +362,9 @@ if plt: # Only show if Matplotlib was imported successfully
 st.header(":green[Estimated Performance]")
 col_perf1, col_perf2, col_perf3, col_perf4 = st.columns(4) # Added 4th column back
 with col_perf1: st.metric(label="Est. Speed ($v$)", value=f"{calculated_speed_mps:.3f} m/s" if not is_resonant else "Resonant!"); st.caption(r"$v \approx C A_{eff} f^2 \sin\delta$")
-with col_perf2: st.metric(label="Est. Base Throughput ($Q_{base}$)", value=f"{throughput_kg_h_base:.0f} kg/h" if not is_resonant else "N/A"); st.caption(r"$Q_{base} \approx v D h \rho$")
+with col_perf2: st.metric(label="Est. Base Throughput ($Q_{base}$)", value=f"{throughput_kg_h_base:.0f} kg/h" if not is_resonant else "N/A"); st.caption(r"$Q_{base} \approx v D h \rho of$")
 with col_perf3: st.metric(label="Est. Actual Throughput ($Q_{actual}$)", value=f"{throughput_kg_h_actual:.0f} kg/h" if not is_resonant else "N/A"); st.caption(r"$Q_{actual} \approx Q_{base} \cdot f_{\infty}$")
-with col_perf4: st.metric(label="Est. Efficiency ($f_∞$)", value=f"{screen_efficiency_perc:.1f}%"); st.caption(f"Blocking Model ($K={toss_indicator_K:.2f}$)")
+with col_perf4: st.metric(label="Est. Efficiency ($f_∞$)", value=f"{screen_efficiency_perc/hole_fraction_area:.1f}%"); st.caption(f"Blocking Model ($K={toss_indicator_K:.2f}$)")
 
 
 with st.expander(":blue[Show Blocking Model Formulas]"):
