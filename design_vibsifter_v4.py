@@ -1,5 +1,5 @@
 # --- Placeholder Constants for Models ---
-EMPIRICAL_CONSTANT_C = 0.000050  # Speed constant
+EMPIRICAL_CONSTANT_C = 0.150  # Speed constant
 GRAVITY_G = 9.81  # m/s^2
 # --- Blocking Model Constants ---
 BLOCKING_FINF_MIN = 0.1  # Minimum possible f_inf
