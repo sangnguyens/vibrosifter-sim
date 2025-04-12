@@ -76,7 +76,7 @@ def calculate_transport_speed_enhanced(A_h_mm, A_v_mm, freq_hz, lead_angle, C):
         return 0.0
     delta_deg = min(max(0, lead_angle), 90)
     delta_rad = np.radians(delta_deg)
-    speed_mps = C * (A_eff_mm * (freq_hz**2)) * np.cos(delta_rad)
+    speed_mps = C * (A_eff_mm * (2 * np.pi * freq_hz)) * np.cos(delta_rad)
     return max(0.0, speed_mps)
 
 
@@ -200,12 +200,12 @@ st.sidebar.header("Input Parameters")
 st.sidebar.subheader("Model Tuning Parameters")
 empirical_constant_c_horizontal = st.sidebar.number_input(
     "Speed Constant (C)",
-    min_value=0.00001,
-    max_value=0.01,
+    min_value=0.001,
+    max_value=0.3,
     value=EMPIRICAL_CONSTANT_C,
-    step=0.00001,
-    format="%.5f",
-    help="For `v ≈ C*A_eff*f²*cos(δ)`",
+    step=0.01,
+    format="%.3f",
+    help="For `v ≈ C*A_eff*omega*cos(δ)`",
 )
 st.sidebar.markdown("**Steady-State Blocking Model (`f∞ = fn(K)`):**")
 hole_fraction_area = st.sidebar.slider(
