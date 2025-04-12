@@ -1,5 +1,5 @@
 # --- Placeholder Constants for Models ---
-EMPIRICAL_CONSTANT_C = 0.000050  # Speed constant
+EMPIRICAL_CONSTANT_C = 0.150  # Speed constant
 GRAVITY_G = 9.81  # m/s^2
 # --- Blocking Model Constants ---
 BLOCKING_FINF_MIN = 0.1  # Minimum possible f_inf
@@ -76,7 +76,7 @@ def calculate_transport_speed_enhanced(A_h_mm, A_v_mm, freq_hz, lead_angle, C):
         return 0.0
     delta_deg = min(max(0, lead_angle), 90)
     delta_rad = np.radians(delta_deg)
-    speed_mps = C * (A_eff_mm * (2 * np.pi * freq_hz)) * np.cos(delta_rad)
+    speed_mps = C * (A_eff_mm/1000 * (2 * np.pi * freq_hz)) * np.cos(delta_rad)
     return max(0.0, speed_mps)
 
 
