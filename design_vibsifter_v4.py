@@ -605,7 +605,7 @@ with col_perf1:
         label="Est. Speed ($v$)",
         value=f"{calculated_speed_mps:.3f} m/s" if not is_resonant else "Resonant!",
     )
-    st.caption(r"$v \approx C A_{eff} f^2 \cos\delta\\A_{eff}=\sqrt{A_h^2 + A_v^2}$")
+    st.caption(r"$v \approx C A_{eff} \omega \cos\delta\\A_{eff}=\sqrt{A_h^2 + A_v^2}$")
 with col_perf2:
     st.metric(
         label="Est. Base Throughput ($Q_{base}$)",
