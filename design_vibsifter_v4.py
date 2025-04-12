@@ -76,7 +76,7 @@ def calculate_transport_speed_enhanced(A_h_mm, A_v_mm, freq_hz, lead_angle, C):
         return 0.0
     delta_deg = min(max(0, lead_angle), 90)
     delta_rad = np.radians(delta_deg)
-    speed_mps = C * (A_eff_mm * (2 * np.pi * freq_hz)) * np.cos(delta_rad)
+    speed_mps = C * (A_eff_mm/1000 * (2 * np.pi * freq_hz)) * np.cos(delta_rad)
     return max(0.0, speed_mps)
 
 
